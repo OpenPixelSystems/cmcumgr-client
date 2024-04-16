@@ -1,0 +1,12 @@
+[binaries]
+c = '/opt/aarch64--glibc--stable-2024.02-1/bin/aarch64-buildroot-linux-gnu-gcc'
+cpp = '/opt/aarch64--glibc--stable-2024.02-1/bin/aarch64-buildroot-linux-gnu-g++'
+ar = '/opt/aarch64--glibc--stable-2024.02-1/bin/aarch64-buildroot-linux-gnu-gcc-ar'
+strip = '/opt/aarch64--glibc--stable-2024.02-1/bin/aarch64-buildroot-linux-gnu-strip'
+pkgconfig = '/opt/aarch64--glibc--stable-2024.02-1/bin/pkgconfig'
+
+[host_machine]
+system = 'linux'
+cpu_family = 'aarch64'
+cpu = 'aarch64'
+endian = 'little'
