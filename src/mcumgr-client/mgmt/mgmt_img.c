@@ -747,7 +747,7 @@ int mgmt_img_upload_decode_rsp(const uint8_t *buf, size_t sz, size_t *off, struc
 		return rc;
 	}
 
-	rsp->mgmt_rc = -1;
+	rsp->mgmt_rc = 0;
 
 	while (!cbor_value_at_end(&val)) {
 		if (cbor_value_get_type(&val) != CborTextStringType) {
