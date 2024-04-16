@@ -226,7 +226,7 @@ int cmd_img_run_image_upload(struct smp_transport *transport, struct mgmt_image_
 
     rc = mgmt_img_upload_decode_rsp(buf, sizeof(buf), &state.offs, rsp);
     if (rc) {
-        fprintf(stderr, "decode faile rsp 0\n");
+        fprintf(stderr, "decode failed rsp %d\n", rc);
         return rc;
     } else {
         if (rsp->mgmt_rc > 0) {

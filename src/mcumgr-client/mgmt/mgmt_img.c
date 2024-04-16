@@ -760,9 +760,11 @@ int mgmt_img_upload_decode_rsp(const uint8_t *buf, size_t sz, size_t *off, struc
 		keyname[MGMT_CBOR_MAX_KEYLEN] = '\0';
 
 		if (rc) {
+			fprintf(stderr, "cbor_value_copy_text_string failed\n");
 			return -ENOMSG;
 		}
 		if (cbor_value_get_type(&val) != CborIntegerType) {
+			fprintf(stderr, "cbor_value_get_type failed\n");
 			return -ENOMSG;
 		}
 		cbor_value_get_int64(&val, &val64);
@@ -775,6 +777,7 @@ int mgmt_img_upload_decode_rsp(const uint8_t *buf, size_t sz, size_t *off, struc
 	}
 
 	if ((rsp->mgmt_rc < 0) || ((rsp->mgmt_rc == 0) && (rsp_off < 0))) {
+		fprintf(stderr, "Invalid response\n");
 		return -ENOMSG;
 	}
 
