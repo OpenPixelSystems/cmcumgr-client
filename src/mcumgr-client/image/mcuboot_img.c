@@ -4,6 +4,7 @@
  */
 
 #include <stdint.h>
+#include <stdio.h>
 #include <errno.h>
 
 #include "byteordering.h"
@@ -143,6 +144,7 @@ static uint16_t tlv_hdr_len(const struct mcuboot_image_tlv *tlv_hdr)
 int mcuboot_image_file_parse(struct file_reader *reader, struct mcuboot_image *image_info)
 {
     int rc;
+	size_t fsize;
     size_t readlen;
     if (!reader || !image_info) {
         return -EINVAL;
@@ -151,6 +153,12 @@ int mcuboot_image_file_parse(struct file_reader *reader, struct mcuboot_image *i
     if (rc) {
         return rc;
     }
+
+	rc = file_reader_size(reader, &fsize);
+	if (rc) {
+		rc = -ENODATA;
+		goto err_close;
+	}
 
     /* read image header */
     struct mcuboot_image_hdr img_hdr;
@@ -250,6 +258,11 @@ int mcuboot_image_file_parse(struct file_reader *reader, struct mcuboot_image *i
         tlv_off += tlv_data_len;
         image_info->file_sz += tlv_data_len;
     }
+
+	/* If this does not match the image has been padded. Adjust to actual image size */
+	if (image_info->file_sz != fsize) {
+		image_info->file_sz = fsize;
+	}
 
     rc = 0;
 err_close:
