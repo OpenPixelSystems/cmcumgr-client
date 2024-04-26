@@ -75,11 +75,32 @@ static int file_close_impl(struct file_handle *fh)
     return 0;
 }
 
+static int file_size_impl(struct file_handle *fh, size_t *sz)
+{
+	struct file_unix_handle *fuh = (struct file_unix_handle *) fh;
+	off_t off;
+
+	if (!fuh || fuh->fd < 0 || !sz) {
+		return -EINVAL;
+	}
+
+	off = lseek(fuh->fd, 0, SEEK_END);
+	if (off < 0) {
+		return -errno;
+	}
+
+	*sz = off;
+
+	lseek(fuh->fd, 0, SEEK_SET);
+
+	return 0;
+}
 
 static const struct file_operations file_op = {
     .open = file_open_impl,
     .read = file_read_impl,
-    .close = file_close_impl
+    .close = file_close_impl,
+	.size = file_size_impl
 };
 
 int file_unix_init(struct file_reader *reader, struct file_unix_handle *fh, const char *filename)

@@ -32,6 +32,14 @@ int file_reader_read(struct file_reader *fr, uint8_t *buf, size_t *sz, size_t of
 	return fr->op->read(fr->fh, buf, sz, off);
 }
 
+int file_reader_size(struct file_reader *fr, size_t *sz)
+{
+	if (!fr || !fr->op || !fr->op->size) {
+		return -EINVAL;
+	}
+	return fr->op->size(fr->fh, sz);
+}
+
 int file_reader_is_valid(struct file_reader *fr)
 {
 	if (!fr || !fr->op || !fr->fh) {
@@ -40,3 +48,4 @@ int file_reader_is_valid(struct file_reader *fr)
 
 	return 1;
 }
+
