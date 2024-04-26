@@ -1,0 +1,37 @@
+name: build
+
+on:
+  push:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: install dependencies
+        run: sudo apt-get install -y meson ninja-build
+
+      - name: retrieve latest aarch64 bootlin sdk
+        working-directory: /opt/
+        run: |
+          wget -q https://toolchains.bootlin.com/downloads/releases/toolchains/aarch64/tarballs/aarch64--glibc--stable-2024.02-1.tar.bz2
+          tar -xf *.tar.bz2
+
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          submodules: true
+
+      - name: setup build
+        run: meson setup --cross-file=meson/aarch64.crossfile build
+
+      - name: build
+        run: ninja -C build
+
+      - name: upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: cmcumgr
+          path: build/src/cli/cmcumgr
